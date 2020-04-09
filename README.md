@@ -2,8 +2,8 @@
 Primeira API REST que vai guardar uma lista em memória e chavear com um Id único. Será possível realizar algumas operações simples também.   
 
 ##to do
-*[ ] Criate venv
-*[ ] Criate pycharm prj
+*[x] Criate venv
+*[X] Import prj on Pycharm
 *[ ] Max
 *[ ] Min
 *[ ] Mean
