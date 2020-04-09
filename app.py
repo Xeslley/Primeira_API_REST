@@ -24,17 +24,20 @@ def save_data():
 
     return jsonify({"status": "success", "message": "data saved successfully", "uuid":uuid})
 
-@app.route("/data/<uuid>", methods=["GET"])
-def retrieve_data(uuid):
-    logger.info(f"Retrieving data associated with UUID '{uuid}' ...")
-
+def atempt_get_data(uuid):
+    raw_stored_data = []
     try:
-        stored_data = data_store.get(uuid)
+        raw_stored_data = data_store.get(uuid)
     except KeyError:
         logger.warning(f"Cannot retrieve data associated with UUID '{uuid}'.")
 
         return jsonify({"status": "failed", "message": "data cannot be retrieved.", "data": []})
+    return raw_stored_data
 
+@app.route("/data/<uuid>", methods=["GET"])
+def retrieve_data(uuid):
+    logger.info(f"Retrieving data associated with UUID '{uuid}' ...")
+    stored_data = atempt_get_data(uuid)
     logger.info(f"Data associated with UUID '{uuid}' retrieved successfully")
 
     return jsonify({"status": "success", "message": "data retrieved successfuly.",
@@ -45,9 +48,8 @@ def retrieve_data(uuid):
 def process_operation(uuid, operation):
     logger.info(f"Prossecing operation '{operation}' on data associated with UUID '{uuid}'...")
 
+    stored_data = atempt_get_data(uuid)
 
-    stored_data = json.loads(retrieve_data(uuid))
-    logger.info(f"data {stored_data}")
     if not stored_data:
         return jsonify(
             {"status": "failed", "message": "data cannot be retrieved.",
@@ -80,8 +82,8 @@ def get_operation(operation_name):
         return operation.op_mean
     elif operation_name == 'median':
         return operation.op_median
-    elif operation_name == 'mode':
-        return operation.op_mode
+    # elif operation_name == 'mode':
+    #     return operation.op_mode
     elif operation_name == 'range':
         return operation.op_range
     else:

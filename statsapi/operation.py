@@ -12,8 +12,8 @@ def op_mean(data):
 def op_median(data):
    return np.median(data)
 
-def op_mode(data):
-    return np.mod(data)
+# def op_mode(data):
+#     return np.mod(data)
 
 def op_range(data):
     return op_max(data) - op_min(data)

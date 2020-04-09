@@ -10,9 +10,9 @@ Primeira API REST que vai guardar uma lista em memória e chavear com um Id úni
 *[x] Min
 *[x] Mean
 *[x] Median
-*[x] Mode
 *[x] Range
-*[ ] Fix bugs
+*[x] Fix bugs
 *[ ] Create tests
+*[ ] Fix bugs
 *[ ] Update README with dependences
 *[ ] Update README with how to test
