@@ -1,11 +1,14 @@
 #imports das libs padrao do python
+import json
 
 #imports de terceiros
 from flask import Flask, request, jsonify
 from loguru import logger
 
 #imports do proprio prj
-from statsapi import data_store
+from statsapi import data_store, operation
+
+
 app = Flask(__name__)
 
 #save received list
@@ -36,6 +39,54 @@ def retrieve_data(uuid):
 
     return jsonify({"status": "success", "message": "data retrieved successfuly.",
                     "data": stored_data})
+
+
+@app.route("/data/<uuid>/<operation>", methods=["GET"])
+def process_operation(uuid, operation):
+    logger.info(f"Prossecing operation '{operation}' on data associated with UUID '{uuid}'...")
+
+
+    stored_data = json.loads(retrieve_data(uuid))
+    logger.info(f"data {stored_data}")
+    if not stored_data:
+        return jsonify(
+            {"status": "failed", "message": "data cannot be retrieved.",
+             "result": None})
+    try:
+        operation_func = get_operation(operation)
+        logger.info(f"operation {operation} = {operation_func}")
+    except NoSuchOperationError:
+        logger.warning(f"Cannot find operation '{operation}'.")
+
+        return jsonify({"status": "failed", "message": f"no such {operation}",
+                    "result": None})
+
+    result = operation_func(stored_data)
+
+    logger.info(f"Operation '{operation}' on data associated with UUID '{uuid}' finished successfully!")
+
+    return jsonify({"status": "success", "message": "result completed successfuly.",
+                "result": result})
+
+class NoSuchOperationError(Exception):
+    pass
+
+def get_operation(operation_name):
+    if operation_name == 'min':
+        return operation.op_min
+    elif operation_name == 'max':
+        return operation.op_max
+    elif operation_name == 'mean':
+        return operation.op_mean
+    elif operation_name == 'median':
+        return operation.op_median
+    elif operation_name == 'mode':
+        return operation.op_mode
+    elif operation_name == 'range':
+        return operation.op_range
+    else:
+        raise NoSuchOperationError
+
 
 
 if __name__ == "__main__":
