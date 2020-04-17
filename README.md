@@ -12,7 +12,7 @@ Primeira API REST que vai guardar uma lista em memória e chavear com um Id úni
 *[x] Median
 *[x] Range
 *[x] Fix bugs
-*[ ] Create tests
-*[ ] Fix bugs
+*[x] Create tests
+*[x] Fix bugs
 *[ ] Update README with dependences
 *[ ] Update README with how to test
